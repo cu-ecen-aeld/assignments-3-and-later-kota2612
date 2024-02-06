@@ -1,0 +1,1 @@
+/home/project/arm-compiler/gcc-arm-10.2-2020.11-mingw-w64-i686-aarch64-none-linux-gnu/bin..aarch64-none-linux-gnu/libc
