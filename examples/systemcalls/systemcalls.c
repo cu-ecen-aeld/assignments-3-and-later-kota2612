@@ -1,5 +1,9 @@
 #include "systemcalls.h"
-
+#include "stdlib.h"
+#include "sys/types.h"
+#include "sys/wait.h"
+#include "unistd.h"
+#include "fcntl.h"
 /**
  * @param cmd the command to execute with system()
  * @return true if the command in @param cmd was executed
@@ -16,8 +20,15 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
-
-    return true;
+	int ret = system(cmd);
+	if(ret == -1)
+	{
+	  return false;
+	}
+	else
+	{
+	  return true;
+	}
 }
 
 /**
@@ -58,10 +69,48 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+   bool result = true;
+    int status = 0;
+    char temp = 1;
 
+    if (count < 3)
+    {
+    	temp = command[0][0];
+    }
+    else
+    {
+        temp = command[2][0];
+    }  
+
+    if (temp == '/')
+    {
+	int pid = fork();
+
+	if (pid == -1)
+	    result = false;
+
+	else if (pid == 0)
+	{
+	    int execv_ret = execv(command[0], command);
+    	    if (execv_ret == -1)
+	    {
+	        result = false;  
+	    }
+	}	
+
+	if(waitpid(pid, &status, 0) == -1)
+	{   
+	    result = false;
+	}
+	else
+	{
+	    result = WIFEXITED(status);
+	}    
+    }
+    else result = false;  
     va_end(args);
 
-    return true;
+    return result;
 }
 
 /**
@@ -92,8 +141,52 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
+    bool result = true;
+    int status = 0;
+    int fd = open("/home/vboxuser/project/assignment-1-kota2612/testfile.txt", O_RDWR|O_CREAT, 0666);
+    char temp = 1;
+
+    if (count < 3)
+    {
+    	temp = command[0][0];
+    }
+    else
+    {
+        temp = command[2][0];
+    }  
+
+    if (temp == '/')
+    {
+	int pid = fork();
+
+if (pid == -1)
+	    result = false;
+
+	else if (pid == 0)
+	{
+	    dup2(fd, 1);   // make stdout go to file
+	    close(fd);
+	    int execv_ret = execv(command[0], command);
+
+	    if (execv_ret == -1)
+	    {
+	        result = false;  
+	    }
+	}	
+
+	if(waitpid(pid, &status, 0) == -1)
+	{   
+	    result = false;
+	}
+	else
+	{
+	    result = WIFEXITED(status);
+	}    
+    }
+    else result = false;    
 
     va_end(args);
+    close(fd);
 
-    return true;
+    return result;
 }

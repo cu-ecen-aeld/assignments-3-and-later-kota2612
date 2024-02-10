@@ -29,11 +29,11 @@ MATCHSTR="The number of files are ${NUMFILES} and the number of matching lines a
 
 echo "Writing ${NUMFILES} files containing string ${WRITESTR} to ${WRITEDIR}"
 
-#rm -rf "${WRITEDIR}"
-make clean
-# create $WRITEDIR if not assignment1
-#assignment=`cat ../conf/assignment.txt`
-make writer
+rm -rf "${WRITEDIR}"
+#make clean
+ create $WRITEDIR if not assignment1
+assignment=`cat ../conf/assignment.txt`
+#make writer
 #if [ $assignment != 'assignment1' ]
 #then
 #	mkdir -p "$WRITEDIR"
@@ -54,7 +54,7 @@ make writer
 
 for i in $( seq 1 $NUMFILES)
 do
-	./writer "$WRITEDIR/${username}$i.txt" "$WRITESTR"
+	./writer.sh "$WRITEDIR/${username}$i.txt" "$WRITESTR"
 done
 
 OUTPUTSTRING=$(./finder.sh "$WRITEDIR" "$WRITESTR")
