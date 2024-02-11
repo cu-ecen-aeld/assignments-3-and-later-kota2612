@@ -11,7 +11,7 @@ KERNEL_VERSION=v5.1.10
 BUSYBOX_VERSION=1_33_1
 FINDER_APP_DIR=$(realpath $(dirname $0))
 ARCH=arm64
-CROSS_COMPILE=aarch64-none-linux-gnu-
+CROSS_COMPILE=aarch64-none-linux-gnu
 
 if [ $# -lt 1 ]
 then
@@ -38,7 +38,6 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
     make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu mrproper    
     make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu defconfig
     make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu all
-    make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu modules
     make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu dtbs
     
 fi
